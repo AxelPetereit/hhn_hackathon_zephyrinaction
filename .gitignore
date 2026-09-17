@@ -1,0 +1,21 @@
+# Zephyr and west output
+build/
+.west/
+*.elf
+*.log
+
+# Python and local environments
+.venv/
+.zephyrenv/
+__pycache__/
+*.pyc
+.ruff_cache/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local scratch output
+*.tmp
+*.local.yaml

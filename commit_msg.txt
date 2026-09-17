@@ -1,0 +1,7 @@
+Working Flappy Bird: direct game start, in-place restart, Microchip logo sprite
+
+- Boots straight into Flappy Bird (skips 4-screen demo cycle)
+- SW2 restarts game in place after game over (no screen reload, avoids timer race)
+- Player sprite is the Microchip logo (RGB565, rounded corners)
+- SRAM region bumped 1MB to 2MB in app.overlay for lv_image widget
+- hss-payload.yaml ELF path fixed for local user
