@@ -116,7 +116,7 @@ public class RawDisk {
 '@
 
 if ([string]::IsNullOrWhiteSpace($PayloadPath)) {
-    $PayloadPath = Join-Path $PSScriptRoot "payload.bin"
+    $PayloadPath = Join-Path $PSScriptRoot "..\examples\flappy-microchip\payload.bin"
 }
 
 if (-not (Test-Path -LiteralPath $PayloadPath -PathType Leaf)) {
@@ -125,7 +125,7 @@ if (-not (Test-Path -LiteralPath $PayloadPath -PathType Leaf)) {
 
 $device = "\\.\PhysicalDrive$DiskNumber"
 
-Write-Host "=== PIC64GX Zephyr Flappy Bird - SD Card Flash ===" -ForegroundColor Cyan
+Write-Host "=== PIC64GX Zephyr Payload - SD Card Flash ===" -ForegroundColor Cyan
 Write-Host "Disk:    $device  |  Offset: sector $SectorOffset" -ForegroundColor Cyan
 Write-Host ""
 
@@ -160,8 +160,7 @@ try {
     [RawDisk]::WriteAtSector($device, $payload, $SectorOffset)
     Write-Host ""
     Write-Host "SD card flashed successfully!" -ForegroundColor Green
-    Write-Host "Insert card into PIC64GX, connect HDMI, power on." -ForegroundColor Cyan
-    Write-Host "SW1 = enter/exit game  |  SW2 = start/flap" -ForegroundColor Cyan
+    Write-Host "Insert the card into the PIC64GX board, connect HDMI and power on." -ForegroundColor Cyan
 } catch {
     Write-Host "ERROR: $_" -ForegroundColor Red
     exit 1
