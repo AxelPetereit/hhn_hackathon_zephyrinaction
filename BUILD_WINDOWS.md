@@ -5,22 +5,16 @@ You do not need this setup to try the pre-built example.
 
 The instructions use PowerShell and do not require WSL or Ubuntu.
 
-## 1. Install host tools
+## 1. Start the setup
 
-Open PowerShell as a normal user. Install the required tools with `winget`:
+Open PowerShell as a normal user. Windows 10 and 11 usually include `winget`.
+Check it with:
 
 ```powershell
-winget install --id Kitware.CMake --exact
-winget install --id Ninja-build.Ninja --exact
-winget install --id oss-winget.gperf --exact
-winget install --id Python.Python.3.12 --exact
-winget install --id Git.Git --exact
-winget install --id oss-winget.dtc --exact
-winget install --id wget --exact
-winget install --id 7zip.7zip --exact
+winget --version
 ```
 
-Close and reopen PowerShell after the installation.
+If `winget` is missing, install **App Installer** from the Microsoft Store.
 
 Python 3.12 is recommended. Newer Python versions may work, but the Zephyr
 documentation warns that some Python packages can fail with newer versions.
@@ -34,27 +28,29 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 .\tools\setup_windows.ps1
 ```
 
-The setup script creates a Python virtual environment, installs `west`, gets
-the Zephyr modules, installs the Zephyr SDK and downloads the Windows HSS
-payload generator.
+The setup script installs the host tools through `winget`, creates a Python
+virtual environment, installs `west`, gets the Zephyr modules, installs the
+Zephyr SDK and downloads the Windows HSS payload generator.
+
+If your company image already contains all host tools, use:
+
+```powershell
+.\tools\setup_windows.ps1 -SkipHostTools
+```
 
 The first setup downloads several hundred megabytes. That is normal. It is a
 toolchain, not a small breakfast cereal.
 
-## 3. Get the example source
+## 3. Use the included example source
 
-The example application is stored in the PIC64GX Zephyr application repository.
-The organizer must provide Git access to that repository.
+The PIC64GX application source is included in this repository:
 
-```powershell
-git clone https://bitbucket.microchip.com/scm/fpga-mcx/pic64gx-zephyr.git `
-  "$HOME\pic64gx-zephyr"
-cd "$HOME\pic64gx-zephyr"
-git am "C:\path\to\hhn_hackathon_zephyrinaction\examples\flappy-microchip\flappy-working-v1.patch"
+```text
+examples\flappy-microchip\source
 ```
 
-Replace `C:\path\to\hhn_hackathon_zephyrinaction` with the actual location of
-this workshop repository.
+No private source clone is needed for the example build. The patch next to the
+source is kept as a reference for how the Flappy Microchip changes were made.
 
 ## 4. Build the example
 
@@ -90,8 +86,8 @@ The generated image is written to:
 examples\flappy-microchip\payload.bin
 ```
 
-The script creates a local HSS configuration with the correct Windows path.
-You do not need to edit a Linux path such as `/home/m77107`.
+The script creates a local HSS configuration with the correct Windows ELF path.
+No manual path editing is needed.
 
 ## 6. Flash the SD card
 

@@ -48,14 +48,6 @@ separate technical dashboard is optional.
 - A new visitor should be able to start immediately after the previous round.
 - The physical hardware should visibly matter to the result.
 
-## Evaluation
-
-- Visitor appeal and fun: 30%
-- Use of Microchip hardware: 25%
-- Real use of Zephyr RTOS: 25%
-- Ease of use and reliability: 10%
-- Creativity and discussion potential: 10%
-
 ## Example
 
 The repository contains **Flappy Microchip**, a small HDMI game running on the

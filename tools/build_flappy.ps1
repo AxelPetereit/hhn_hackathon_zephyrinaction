@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$Workspace = (Join-Path $HOME "zephyrproject"),
-    [string]$ApplicationSource = (Join-Path $HOME "pic64gx-zephyr"),
+    [string]$ApplicationSource,
     [string]$SdkDirectory = (Join-Path $HOME "zephyr-sdk-1.0.1"),
     [string]$BuildDirectory = (Join-Path $HOME "zephyrproject\build\flappy-microchip")
 )
@@ -10,6 +10,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $west = Join-Path $Workspace ".venv\Scripts\west.exe"
+if ([string]::IsNullOrWhiteSpace($ApplicationSource)) {
+    $ApplicationSource = Join-Path $PSScriptRoot "..\examples\flappy-microchip\source"
+}
 $application = Join-Path $ApplicationSource "demos\pic64_smp_hello"
 
 if (-not (Test-Path $west)) {

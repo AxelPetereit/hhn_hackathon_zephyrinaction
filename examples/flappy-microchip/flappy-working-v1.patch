@@ -8,7 +8,7 @@ Subject: [PATCH] Working Flappy Bird: direct game start, in-place restart,
 - SW2 restarts game in place after game over (no screen reload, avoids timer race)
 - Player sprite is the Microchip logo (RGB565, rounded corners)
 - SRAM region bumped 1MB to 2MB in app.overlay for lv_image widget
-- hss-payload.yaml ELF path fixed for local user
+- hss-payload.yaml ELF path changed to a local placeholder
 ---
  demos/pic64_smp_hello/CMakeLists.txt          |   1 +
  demos/pic64_smp_hello/app.overlay             |   2 +-
@@ -55,7 +55,7 @@ index c4ecef6..5de8b8f 100644
  
  payloads:
 -  /home/administrator/zephyr/build/pic64_smp_hello/zephyr/zephyr.elf:
-+  /home/m77107/zephyr/build/pic64_smp_hello/zephyr/zephyr.elf:
++  zephyr.elf:
      exec-addr: '0x80000000'
      owner-hart: u54_1
      secondary-hart: u54_2
@@ -452,4 +452,3 @@ index 59e2ae8..ea383ab 100644
  	score_lbl = lv_label_create(scr);
 -- 
 2.53.0
-

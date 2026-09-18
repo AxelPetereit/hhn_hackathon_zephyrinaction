@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$Workspace = (Join-Path $HOME "zephyrproject"),
-    [string]$ApplicationSource = (Join-Path $HOME "pic64gx-zephyr"),
+    [string]$ApplicationSource,
     [string]$HssDirectory = (Join-Path $HOME "hss-payload-generator-v2026.04.1"),
     [string]$BuildDirectory = (Join-Path $HOME "zephyrproject\build\flappy-microchip"),
     [string]$OutputPath = (Join-Path $PSScriptRoot "..\examples\flappy-microchip\payload.bin")
@@ -11,6 +11,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $elf = Join-Path $BuildDirectory "zephyr\zephyr.elf"
+if ([string]::IsNullOrWhiteSpace($ApplicationSource)) {
+    $ApplicationSource = Join-Path $PSScriptRoot "..\examples\flappy-microchip\source"
+}
 $sourceConfig = Join-Path $ApplicationSource "demos\pic64_smp_hello\hss-payload.yaml"
 $payload = Join-Path $BuildDirectory "zephyr\payload.bin"
 $hss = Get-ChildItem -Path $HssDirectory -Filter "hss-payload-generator*.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
@@ -28,7 +31,7 @@ if (-not (Test-Path $sourceConfig)) {
 $localConfig = Join-Path $BuildDirectory "hss-payload.local.yaml"
 $elfYaml = $elf -replace "\\", "/"
 $config = Get-Content -Raw -Path $sourceConfig
-$config = [regex]::Replace($config, "(?m)^  .*/zephyr/build/pic64_smp_hello/zephyr/zephyr.elf:", ("  {0}:" -f $elfYaml))
+$config = [regex]::Replace($config, "(?m)^  .*zephyr\.elf:", ("  {0}:" -f $elfYaml))
 Set-Content -Path $localConfig -Value $config -Encoding ascii
 
 & $hss.FullName -c $localConfig $payload

@@ -2,7 +2,8 @@
 param(
     [string]$Workspace = (Join-Path $HOME "zephyrproject"),
     [string]$SdkDirectory = (Join-Path $HOME "zephyr-sdk-1.0.1"),
-    [string]$HssDirectory = (Join-Path $HOME "hss-payload-generator-v2026.04.1")
+    [string]$HssDirectory = (Join-Path $HOME "hss-payload-generator-v2026.04.1"),
+    [switch]$SkipHostTools
 )
 
 Set-StrictMode -Version Latest
@@ -10,13 +11,44 @@ $ErrorActionPreference = "Stop"
 
 function Require-Command([string]$Name) {
     if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
-        throw "Required command not found: $Name. Run the host tool installation in BUILD_WINDOWS.md first."
+        throw "Required command not found: $Name. Install it with winget or run this script again."
     }
+}
+
+if (-not $SkipHostTools) {
+    Require-Command "winget"
+
+    $packages = @(
+        @{ Command = "cmake"; Id = "Kitware.CMake" },
+        @{ Command = "ninja"; Id = "Ninja-build.Ninja" },
+        @{ Command = "gperf"; Id = "oss-winget.gperf" },
+        @{ Command = "py"; Id = "Python.Python.3.12" },
+        @{ Command = "git"; Id = "Git.Git" },
+        @{ Command = "dtc"; Id = "oss-winget.dtc" },
+        @{ Command = "7z"; Id = "7zip.7zip" }
+    )
+
+    foreach ($package in $packages) {
+        if (-not (Get-Command $package.Command -ErrorAction SilentlyContinue)) {
+            Write-Host "Installing $($package.Id)..."
+            & winget install --id $package.Id --exact --accept-source-agreements --accept-package-agreements
+            if ($LASTEXITCODE -ne 0) {
+                throw "Could not install $($package.Id)."
+            }
+        }
+    }
+
+    $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" +
+        [Environment]::GetEnvironmentVariable("Path", "User")
 }
 
 Require-Command "py"
 Require-Command "git"
 Require-Command "7z"
+Require-Command "cmake"
+Require-Command "ninja"
+Require-Command "gperf"
+Require-Command "dtc"
 
 $venv = Join-Path $Workspace ".venv"
 $python = Join-Path $venv "Scripts\python.exe"
@@ -48,7 +80,9 @@ if (-not (Test-Path $sdkSetup)) {
     $sdkArchive = Join-Path $env:TEMP "zephyr-sdk-1.0.1_windows-x86_64_gnu.7z"
     $sdkUrl = "https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v1.0.1/zephyr-sdk-1.0.1_windows-x86_64_gnu.7z"
     Invoke-WebRequest -Uri $sdkUrl -OutFile $sdkArchive
-    & 7z x $sdkArchive "-o$HOME" -y
+    $sdkParent = Split-Path -Parent $SdkDirectory
+    New-Item -ItemType Directory -Force -Path $sdkParent | Out-Null
+    & 7z x $sdkArchive "-o$sdkParent" -y
     & $sdkSetup
 }
 

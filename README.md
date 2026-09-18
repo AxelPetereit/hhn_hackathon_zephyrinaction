@@ -83,7 +83,6 @@ Bluetooth, Wi-Fi or Ethernet.
 
 ## License and source access
 
-The Flappy Microchip example uses an application repository that may require
-Microchip Git access. The pre-built image can be used without that access.
-The organizer should provide source access to teams that want to build or
-modify the example.
+The Flappy Microchip application source is included in this repository. The
+patch next to it documents the original example change set. The upstream
+Microchip repository is only needed if the source snapshot should be updated.

@@ -40,7 +40,12 @@ then build a different visitor experience.
 
 ## Source
 
-The application source is maintained in the PIC64GX Zephyr application
-repository. The patch in this directory contains the Flappy Microchip changes.
-The organizer must provide access to the source repository for teams that want
-to rebuild or modify the example.
+The complete application source is included in this directory:
+
+```text
+source/
+```
+
+The patch in this directory is kept as a reference for the original Flappy
+Microchip change set. Teams can build or modify the included source without
+access to another repository.
