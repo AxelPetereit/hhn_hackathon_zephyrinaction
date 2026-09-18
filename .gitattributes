@@ -5,3 +5,11 @@
 *.png binary
 *.jpg binary
 *.bin binary
+
+# Files consumed by POSIX shells or by Python on all three platforms must keep
+# LF. A CR at the end of a sourced KEY=value line becomes part of the value and
+# silently corrupts it, which would break every build that reads versions.env.
+setup/common/versions.env text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
